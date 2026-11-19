@@ -16,5 +16,6 @@ Thumbs.db
 # AI / 工具缓存
 .codebuddy/
 
-# 本地参考资料，不纳入版本库
+# 本地参考资料与开发者文档，不纳入版本库
 MACRO开发应用手册*.html
+README_TECH.md
