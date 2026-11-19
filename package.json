@@ -3,8 +3,19 @@
   "displayName": "Syntec Macro",
   "description": "Syntec 数控系统宏程序语言支持：语法高亮、代码片段、文件关联（支持无扩展名宏文件）",
   "version": "0.1.0",
-  "publisher": "local",
+  "publisher": "Aoliaosiki",
+  "author": {
+    "name": "Aoliaosiki"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Aoliaosiki/syntec-macro.git"
+  },
+  "homepage": "https://github.com/Aoliaosiki/syntec-macro#readme",
+  "bugs": {
+    "url": "https://github.com/Aoliaosiki/syntec-macro/issues"
+  },
   "engines": {
     "vscode": "^1.85.0"
   },

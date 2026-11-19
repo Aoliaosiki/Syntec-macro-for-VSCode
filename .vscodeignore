@@ -1,7 +1,13 @@
 .vscode/**
+.git/**
+.gitignore
 .venv/**
-J第十周 Marco/**
 test/**
 **/*.py
 **/__pycache__/**
 *.vsix
+
+# 开发者文档与本地手册，不进入扩展包
+README_TECH.md
+MACRO开发应用手册.html
+MACRO开发应用手册_完整版.html
