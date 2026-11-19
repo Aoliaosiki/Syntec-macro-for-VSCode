@@ -14,7 +14,7 @@
 
 - ✅ **G 码高亮与原生 NC-Gcode 完全一致**：语法文件中的 G/M/N/坐标/F/S/T/P/Q/C/W/K/L/注释规则**原样照搬** `ml.nc-gcode` 的 scope 命名与正则，配色与原生扩展逐 token 一致，不额外自定义覆盖
 - ✅ **宏程序高亮**：`#`/`@`/`MAR`/`AR` 变量（含动态数组）、控制流关键字、运算符、**手册函数表全量 60 个内置函数**、`%@MACRO` 文件头、`//` `(* *)` `( ... )` 注释
-- ✅ **无扩展名文件自动识别**：路径匹配 `**/Macro/G*`（外扩 G 码）、`**/Macro/O*`（子程序）等模式的文件自动按 Syntec 语言打开
+- ✅ **无扩展名文件自动识别**：`filenamePatterns` 为 `**/*`，任意目录下的无扩展名文件（如 `G0200`、`O1234`）均自动按 Syntec 语言打开；有后缀文件仍按扩展名优先识别
 - ✅ **代码片段**：主程序、外扩 G 码、子程序、`if/ifelse/for/while/repeat/case/goto/exit`、变量赋值、`ar/mar`、`alarm/msg/print/sysdata` 等 18 个模板
 - ✅ **括号配对、代码折叠**（`IF…END_IF`、`FOR…END_FOR`、`WHILE…END_WHILE`、`REPEAT…END_REPEAT`、`CASE…END_CASE`）、**自动缩进**
 - ✅ **语言图标与显示名称**（Syntec Macro）
@@ -273,7 +273,7 @@ Syntec 中 `(` 兼作数学运算括号。高亮规则用前置断言 `(?<![A-Za
 | --- | --- |
 | `languages[].extensions` | 关联 `.mac` `.pmc` `.nc` `.cnc` |
 | `languages[].filenames` | `G0200`（无扩展名） |
-| `languages[].filenamePatterns` | `**/Macro/G*`、`**/Macro/O*` 等 |
+| `languages[].filenamePatterns` | `**/*`（匹配所有无后缀文件） |
 | `grammars` | 语法文件路径 `./syntaxes/syntec.tmLanguage.json` |
 | `snippets` | 片段文件路径 `./snippets/syntec.code-snippets` |
 | `themes` | 主题文件路径 `./themes/syntec-color-theme.json` |
@@ -292,3 +292,18 @@ Syntec 中 `(` 兼作数学运算括号。高亮规则用前置断言 `(?<![A-Za
 | 版本 | 说明 |
 | --- | --- |
 | 0.1.0 | 初始版本；G 码对齐原生 NC-Gcode；宏程序高亮；按《MACRO开发应用手册》完整版核对函数表，内置函数扩展至 60 个（新增 `ATAN2` `AXID` `DBNEW` `DBSAVE` `DBINSERT` `DBDELETE` `SLEEP` `SIGN` `EXP` `READDI` `READDO` `READABIT` `READRREGBIT` `SETDO` `SETABIT` `SETRREGBIT` `SETDRAW` `DRAWHOLE` `PUSH` `POP` `STKTOP` `STD` `STDAX` `SYSVAR` `GETTRAPARG` `CHKINF`） |
+
+---
+
+## 版权与许可
+
+**Copyright (c) 2026 Aoliaosiki**
+
+本项目基于 [MIT License](./LICENSE) 发布。
+
+你被允许自由使用、复制、修改、合并、发布、分发、再许可和/或销售本软件的副本，但须在所有副本或主要部分中保留上述版权声明与本许可声明。本软件按「原样」提供，不附带任何明示或暗示的担保。
+
+### 第三方与参考资料声明
+
+- G 码部分的 TextMate scope 命名与正则参考 [`ml.nc-gcode`](https://marketplace.visualstudio.com/items?itemName=ML.nc-gcode) 扩展的实现。
+- `MACRO开发应用手册*.html` 为 Syntec 控制器宏程序开发参考资料，版权归原厂或原作者所有。本仓库仅将其作为语法规则的核对依据；若公开分发，请自行确认其授权范围，或将其从公开仓库中移除。
