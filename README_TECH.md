@@ -557,6 +557,30 @@ vsce package                   # 生成 syntec-macro-0.1.0.vsix
 Get-ChildItem "$env:USERPROFILE\.vscode\extensions" | Where-Object { $_.Name -like '*syntec*' }
 ```
 
+### 11.5 GitHub Actions 自动发布（推荐）
+
+工作流文件：`.github/workflows/release.yml`，触发条件为推送 `v*` 标签（如 `v0.1.1`）。
+
+执行流程：
+
+1. 校验 `package.json` 的 `version` 与 tag 一致（`v0.1.1` ↔ `0.1.1`），不一致直接失败
+2. `npx @vscode/vsce package` 生成 `syntec-macro-<version>.vsix`
+3. `gh release create` 创建 Release 并上传 vsix；若 Release 已存在则改用 `gh release upload --clobber`
+
+发版操作：
+
+```bash
+# 1. 修改 package.json 的 version 与 CHANGELOG.md
+git add . && git commit -m "Release v0.1.1"
+git push
+
+# 2. 打 tag 并推送，自动触发工作流
+git tag -a v0.1.1 -m "v0.1.1"
+git push origin v0.1.1
+```
+
+> 注意：tag 与 `package.json` 版本必须完全对应，否则工作流在第一步校验时失败。
+
 ---
 
 ## 12. 正则与 JSON 转义速查（踩坑重灾区）
@@ -762,3 +786,4 @@ Inline Suggestions（如 GitHub Copilot）的提示，表示当前光标位置�
 - 建立 Git 仓库：`D:\common\Project\A仓库\syntec-macro`，remote `https://github.com/Aoliaosiki/syntec-macro.git`，分支 `main`。
 - 厂商手册 `MACRO开发应用手册*.html` 保留在源码目录，但不纳入 Git 仓库（`.gitignore` 排除）。
 - `vsce package` 验证通过：12 个文件、约 17 KB、无警告。
+- 新增 `.github/workflows/release.yml`：推送 `v*` 标签后自动校验版本、打包 VSIX 并创建 GitHub Release、上传附件。
