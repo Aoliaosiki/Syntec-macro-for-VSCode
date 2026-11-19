@@ -1,0 +1,195 @@
+{
+  "Macro Main Program": {
+    "prefix": ["macro", "header", "@macro"],
+    "body": [
+      "%@MACRO",
+      "",
+      "#${1:100} := ${2:0}; // ${3:注释说明}",
+      "",
+      "${4:// 主程序体}",
+      "G90 G54;",
+      "G00 X0. Y0.;",
+      "",
+      "M30;"
+    ],
+    "description": "新建宏程序-主程序模板（%@MACRO 开头，M30 结束）"
+  },
+  "Macro External G-code": {
+    "prefix": ["msub", "gcode", "extg"],
+    "body": [
+      "%@MACRO",
+      "",
+      "${1:// 外扩G码内容，被主程序以 G${2:200} 调用}",
+      "",
+      "M99;"
+    ],
+    "description": "外扩G码模板（M99 返回主程序）"
+  },
+  "Macro Sub O-code": {
+    "prefix": ["osub", "m98"],
+    "body": [
+      "O${1:1234}",
+      "%@MACRO",
+      "",
+      "${2:// 子程序内容，被 M98P${1:1234} 调用}",
+      "",
+      "M99;"
+    ],
+    "description": "子程序模板（O 编号，M98 调用，M99 返回）"
+  },
+  "If Then": {
+    "prefix": ["if"],
+    "body": [
+      "IF (${1:条件}) THEN",
+      "  ${2:// 陈述列表}",
+      "END_IF;"
+    ],
+    "description": "IF 条件判断（条件用 ( ) 括起）"
+  },
+  "If ElseIf Else": {
+    "prefix": ["ifelse"],
+    "body": [
+      "IF (${1:条件1}) THEN",
+      "  ${2:// 陈述列表}",
+      "ELSEIF (${3:条件2}) THEN",
+      "  ${4:// 陈述列表}",
+      "ELSE",
+      "  ${5:// 陈述列表}",
+      "END_IF;"
+    ],
+    "description": "IF / ELSEIF / ELSE 多分支判断"
+  },
+  "For Loop": {
+    "prefix": ["for", "loop"],
+    "body": [
+      "FOR ${1:#30} := ${2:1} TO ${3:5} BY ${4:1} DO",
+      "  ${5:// 循环体}",
+      "  G00 X(${1:#30}*10.);",
+      "END_FOR;"
+    ],
+    "description": "FOR 循环（变量 := 初值 TO 终值 BY 步长 DO ... END_FOR）"
+  },
+  "While Loop": {
+    "prefix": ["while"],
+    "body": [
+      "WHILE (${1:条件}) DO",
+      "  ${2:// 循环体}",
+      "END_WHILE;"
+    ],
+    "description": "WHILE 条件循环（END_WHILE 结束）"
+  },
+  "Repeat Until": {
+    "prefix": ["repeat"],
+    "body": [
+      "REPEAT",
+      "  ${1:// 循环体（至少执行一次）}",
+      "UNTIL (${2:条件})",
+      "END_REPEAT;"
+    ],
+    "description": "REPEAT / UNTIL 先执行后判断循环"
+  },
+  "Case Select": {
+    "prefix": ["case"],
+    "body": [
+      "CASE ${1:#1} OF",
+      "  ${2:1}:",
+      "    ${3:// 陈述列表}",
+      "  ${4:2, 3}:",
+      "    ${5:// 陈述列表}",
+      "  ELSE",
+      "    ${6:// 陈述列表}",
+      "END_CASE;"
+    ],
+    "description": "CASE 多分支选择（OF ... END_CASE）"
+  },
+  "Goto Label": {
+    "prefix": ["goto"],
+    "body": [
+      "GOTO ${1:10};",
+      "",
+      "N${1:10} ${2:// 跳转目标行号}"
+    ],
+    "description": "GOTO 跳转（配合 N 行号使用）"
+  },
+  "Exit Loop": {
+    "prefix": ["exit"],
+    "body": [
+      "IF (${1:条件}) THEN",
+      "  EXIT;",
+      "END_IF;"
+    ],
+    "description": "EXIT 跳出当前循环"
+  },
+  "Variable Assign": {
+    "prefix": ["assign", "set"],
+    "body": [
+      "#${1:100} := ${2:0};",
+      "#${3:101} := #${4:100} + ${5:1};",
+      "@${6:1} := ${7:0}; // @公共变量"
+    ],
+    "description": "变量赋值（:=）"
+  },
+  "Register Variable": {
+    "prefix": ["reg", "rreg"],
+    "body": [
+      "R${1:7000} := ${2:0};",
+      "@${3:1} := R${1:7000}; // @变量与R寄存器对应",
+      "R${4:7001} := ${5:1};"
+    ],
+    "description": "R 寄存器 / @ 变量操作"
+  },
+  "App Variable": {
+    "prefix": ["ar", "mar", "app"],
+    "body": [
+      "AR${1:1} := ${2:789}; // App 区域变数",
+      "MAR${3:1} := ${4:789}; // App 永久储存变数",
+      "AR[#${5:1}] := ${6:567}; // 间接存取",
+      "MAR[#${5:1}] := ${6:567}; // 间接存取"
+    ],
+    "description": "AR / MAR App 变量（含动态间接存取）"
+  },
+  "Get Argument": {
+    "prefix": ["getarg", "arg"],
+    "body": [
+      "#${1:100} := GETARG(${2:X1}); // 读取命名引数",
+      "#${3:4} := GETARG(${4:I});   // 或标准地址字"
+    ],
+    "description": "GETARG 读取调用时的引数值"
+  },
+  "Alarm Msg": {
+    "prefix": ["alarm"],
+    "body": [
+      "IF (${1:条件}) THEN",
+      "  ALARM(${2:300}, \"${3:警报内容}\");",
+      "  M99;",
+      "END_IF;"
+    ],
+    "description": "ALARM 系统报警（条件满足时报警并返回）"
+  },
+  "Msg Prompt": {
+    "prefix": ["msg"],
+    "body": [
+      "MSG(${1:300}, \"${2:提示内容}\");"
+    ],
+    "description": "MSG 提示信息（不暂停系统）"
+  },
+  "Print Output": {
+    "prefix": ["print", "open"],
+    "body": [
+      "OPEN(\"${1:OUTPUT}.NC\"); // 开启文件",
+      "FOR #${2:1} := 1 TO ${3:5} BY 1 DO",
+      "  PRINT(\"G01 X#${2:1}\"); // 输出内容",
+      "END_FOR;",
+      "CLOSE(); // 关闭传输口"
+    ],
+    "description": "OPEN / PRINT / CLOSE 文档输出"
+  },
+  "System Data": {
+    "prefix": ["sysdata", "sys"],
+    "body": [
+      "@${1:1} := SYSDATA(${2:336}); // 轴卡交换时间",
+      "@${3:2} := DRVDATA(${4:1000}, ${5:3366}); // 驱动器状态"
+    ],
+    "description": "SYSDATA / DRVDATA 读取系统数据"
+  }
+}

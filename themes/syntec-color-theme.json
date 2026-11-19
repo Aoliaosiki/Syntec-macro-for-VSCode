@@ -1,0 +1,121 @@
+{
+  "name": "Syntec Macro Color",
+  "type": "dark",
+  "colors": {
+    "editor.background": "#1f1f1f",
+    "editor.foreground": "#CCCCCC",
+    "editorLineNumber.foreground": "#6E7681",
+    "editorLineNumber.activeForeground": "#CCCCCC",
+    "sideBar.background": "#181818",
+    "sideBar.foreground": "#CCCCCC",
+    "activityBar.background": "#181818",
+    "activityBar.foreground": "#D7D7D7",
+    "tab.activeBackground": "#1f1f1f",
+    "tab.activeForeground": "#FFFFFF",
+    "tab.inactiveBackground": "#181818",
+    "tab.inactiveForeground": "#9D9D9D",
+    "statusBar.background": "#181818",
+    "statusBar.foreground": "#CCCCCC",
+    "titleBar.activeBackground": "#181818",
+    "titleBar.activeForeground": "#CCCCCC",
+    "editorWidget.background": "#202020",
+    "input.background": "#313131",
+    "input.foreground": "#CCCCCC",
+    "dropdown.background": "#313131",
+    "dropdown.foreground": "#CCCCCC"
+  },
+  "tokenColors": [
+    {
+      "comment": "============= G 码部分（原生 NC-Gcode scope，Dark Modern 同款配色）=============",
+      "scope": "constant.gcode",
+      "settings": { "foreground": "#9CDCFE" }
+    },
+    {
+      "scope": "keyword.control.gcode.gcode",
+      "settings": { "foreground": "#569CD6", "fontStyle": "bold" }
+    },
+    {
+      "scope": "keyword.string.gcode",
+      "settings": { "foreground": "#CE9178" }
+    },
+    {
+      "scope": "string.xcode.gcode",
+      "settings": { "foreground": "#4EC9B0" }
+    },
+    {
+      "scope": "comment.type.ycode.gcode",
+      "settings": { "foreground": "#DCDCAA" }
+    },
+    {
+      "scope": "support.function.mcode.gcode",
+      "settings": { "foreground": "#C586C0", "fontStyle": "bold" }
+    },
+    {
+      "scope": "support.type.dDfFhHsStTcode.gcode",
+      "settings": { "foreground": "#4EC9B0" }
+    },
+    {
+      "scope": "variable.parameter.pqecode.gcode",
+      "settings": { "foreground": "#569CD6" }
+    },
+    {
+      "scope": "string.control.mcode.gcode",
+      "settings": { "foreground": "#569CD6" }
+    },
+    {
+      "scope": "comment.gcode",
+      "settings": { "foreground": "#6A9955", "fontStyle": "italic" }
+    },
+    {
+      "comment": "============= 宏程序部分（.syntec 后缀 scope，Dark Modern 同款配色）=============",
+      "scope": "keyword.control.syntec",
+      "settings": { "foreground": "#C586C0", "fontStyle": "bold" }
+    },
+    {
+      "scope": "entity.name.function.syntec",
+      "settings": { "foreground": "#DCDCAA", "fontStyle": "bold" }
+    },
+    {
+      "scope": "variable.other.syntec",
+      "settings": { "foreground": "#9CDCFE", "fontStyle": "italic" }
+    },
+    {
+      "scope": "keyword.operator.syntec",
+      "settings": { "foreground": "#D4D4D4" }
+    },
+    {
+      "scope": "punctuation.definition.statement.syntec",
+      "settings": { "foreground": "#D4D4D4" }
+    },
+    {
+      "scope": "support.function.syntec",
+      "settings": { "foreground": "#DCDCAA", "fontStyle": "bold" }
+    },
+    {
+      "scope": "constant.numeric.syntec",
+      "settings": { "foreground": "#B5CEA8" }
+    },
+    {
+      "scope": "constant.language.syntec",
+      "settings": { "foreground": "#569CD6", "fontStyle": "bold" }
+    },
+    {
+      "scope": "string.quoted.double.syntec",
+      "settings": { "foreground": "#CE9178" }
+    },
+    {
+      "scope": ["comment.line.double-slash.syntec", "comment.block.syntec"],
+      "settings": { "foreground": "#6A9955", "fontStyle": "italic" }
+    },
+    {
+      "scope": [
+        "punctuation.definition.comment.begin.syntec",
+        "punctuation.definition.comment.end.syntec",
+        "punctuation.definition.string.begin.syntec",
+        "punctuation.definition.string.end.syntec",
+        "constant.character.escape.syntec"
+      ],
+      "settings": { "foreground": "#CE9178" }
+    }
+  ]
+}

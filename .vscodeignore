@@ -1,0 +1,7 @@
+.vscode/**
+.venv/**
+J第十周 Marco/**
+test/**
+**/*.py
+**/__pycache__/**
+*.vsix

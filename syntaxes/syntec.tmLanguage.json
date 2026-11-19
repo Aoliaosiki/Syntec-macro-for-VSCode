@@ -1,0 +1,257 @@
+{
+  "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+  "name": "Syntec Macro",
+  "scopeName": "source.syntec",
+  "fileTypes": ["mac", "pmc", "nc", "cnc"],
+  "patterns": [
+    { "include": "#strings" },
+    { "include": "#comments" },
+    { "include": "#fileHeader" },
+    { "include": "#macroDirectives" },
+    { "include": "#subProgram" },
+    { "include": "#variables" },
+    { "include": "#keywords" },
+    { "include": "#functions" },
+    { "include": "#gcode" },
+    { "include": "#operators" },
+    { "include": "#numbers" }
+  ],
+  "repository": {
+    "comments": {
+      "patterns": [
+        {
+          "comment": "宏程序块注释 (* ... *) — scope 加 .syntec 后缀",
+          "begin": "\\(\\*",
+          "end": "\\*\\)",
+          "name": "comment.block.syntec",
+          "beginCaptures": {
+            "0": { "name": "punctuation.definition.comment.begin.syntec" }
+          },
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.comment.end.syntec" }
+          }
+        },
+        {
+          "comment": "宏程序单行注释 // — scope 加 .syntec 后缀",
+          "match": "//.*$",
+          "name": "comment.line.double-slash.syntec"
+        },
+        {
+          "comment": "Syntec 注释：圆括号 ( ... ) — 加 ?<![A-Za-z0-9]) 前置断言避免误吞运算括号 X(...)",
+          "begin": "(?<![A-Za-z0-9])\\(",
+          "end": "\\)",
+          "name": "comment.block.syntec",
+          "patterns": [
+            {
+              "name": "constant.character.escape.syntec",
+              "match": "\\\\."
+            }
+          ]
+        }
+      ]
+    },
+    "strings": {
+      "patterns": [
+        {
+          "begin": "\"",
+          "end": "\"",
+          "name": "string.quoted.double.syntec",
+          "beginCaptures": {
+            "0": { "name": "punctuation.definition.string.begin.syntec" }
+          },
+          "endCaptures": {
+            "0": { "name": "punctuation.definition.string.end.syntec" }
+          }
+        }
+      ]
+    },
+    "fileHeader": {
+      "patterns": [
+        {
+          "comment": "宏程序文件头 %@MACRO",
+          "match": "^\\s*%@\\s*MACRO",
+          "name": "keyword.control.syntec"
+        }
+      ]
+    },
+    "macroDirectives": {
+      "patterns": [
+        {
+          "comment": "宏程序结束指令 @ENDMACRO / @ENDPROGRAM / @END",
+          "match": "^\\s*@(ENDMACRO|ENDPROGRAM|END)(?=\\s|$)",
+          "name": "keyword.control.syntec"
+        },
+        {
+          "comment": "宏定义 @MACRO G9000（G9000 为宏名）",
+          "match": "^\\s*(@MACRO)\\b(?:\\s+([Gg][0-9]{2,4}))?",
+          "captures": {
+            "1": { "name": "keyword.control.syntec" },
+            "2": { "name": "entity.name.function.syntec" }
+          }
+        },
+        {
+          "comment": "其他 @ 开头的宏指令",
+          "match": "^\\s*@[A-Za-z][A-Za-z0-9_]*",
+          "name": "keyword.control.syntec"
+        }
+      ]
+    },
+    "subProgram": {
+      "patterns": [
+        {
+          "comment": "子程序号 O1234",
+          "match": "^\\s*[Oo][0-9]{1,5}\\b",
+          "name": "entity.name.function.syntec"
+        }
+      ]
+    },
+    "variables": {
+      "patterns": [
+        {
+          "comment": "App 变量数组 MAR[..] / AR[..]",
+          "match": "\\b(?:MAR|AR)\\[[^\\]]*\\]",
+          "name": "variable.other.syntec"
+        },
+        {
+          "comment": "公共变量数组 @[..]",
+          "match": "@\\[[^\\]]*\\]",
+          "name": "variable.other.syntec"
+        },
+        {
+          "comment": "局部变量数组 #[..]",
+          "match": "#\\[[^\\]]*\\]",
+          "name": "variable.other.syntec"
+        },
+        {
+          "comment": "App 变量 MAR1 / AR1",
+          "match": "\\b(?:MAR|AR)\\d+",
+          "name": "variable.other.syntec"
+        },
+        {
+          "comment": "公共变量 @10",
+          "match": "@\\d+",
+          "name": "variable.other.syntec"
+        },
+        {
+          "comment": "局部变量 #100",
+          "match": "#\\d+",
+          "name": "variable.other.syntec"
+        },
+        {
+          "comment": "字母变量 #ABC",
+          "match": "#[A-Za-z][A-Za-z0-9_]*",
+          "name": "variable.other.syntec"
+        }
+      ]
+    },
+    "keywords": {
+      "patterns": [
+        {
+          "comment": "控制流关键字 IF/THEN/ELSE/END_IF/FOR/WHILE/GOTO 等",
+          "match": "\\b(?:IF|THEN|ELSEIF|ELSE|END_IF|FOR|TO|BY|DO|END_FOR|WHILE|END_WHILE|REPEAT|UNTIL|END_REPEAT|CASE|OF|END_CASE|GOTO|EXIT|RETURN|STOP)\\b",
+          "name": "keyword.control.syntec"
+        },
+        {
+          "match": "(?<=\\d)(?:THEN|ELSE|DO|OF)\\b",
+          "name": "keyword.control.syntec"
+        },
+        {
+          "match": "\\b(?:TO|BY)(?=\\d)",
+          "name": "keyword.control.syntec"
+        },
+        {
+          "comment": "逻辑运算符 AND/OR/XOR/NOT/MOD",
+          "match": "\\b(?:AND|OR|XOR|NOT|MOD)\\b",
+          "name": "keyword.operator.syntec"
+        },
+        {
+          "comment": "常量 TRUE/FALSE/ON/OFF",
+          "match": "\\b(?:TRUE|FALSE|ON|OFF)\\b",
+          "name": "constant.language.syntec"
+        }
+      ]
+    },
+    "functions": {
+      "patterns": [
+        {
+          "comment": "内置函数（依据手册函数表 Function List，覆盖 ABS~DRVDATA 共 60 个）",
+          "match": "\\b(?:READRREGBIT|SETRREGBIT|GETTRAPARG|DBDELETE|DBINSERT|DBLOAD|DBNEW|DBOPEN|DBSAVE|DRAWHOLE|DRVDATA|SYSDATA|STR2INT|SCANTEXT|SYSVAR|SETDRAW|STKTOP|STDAX|READDI|READDO|READABIT|RANDOM|SETDO|SETABIT|SIGN|SLEEP|PUSH|PRINT|PARAM|GETARG|FLOOR|CEIL|CLOSE|ALARM|ROUND|POW|POP|OPEN|MSG|SQRT|MAX|MIN|LN|EXP|ABS|ACOS|ASIN|ATAN|ATAN2|AXID|COS|TAN|SIN|WAIT|CHKINF|CHKMN|CHKSN|CHKMT|CHKMI|STD)\\s*(?=\\()",
+          "name": "support.function.syntec"
+        }
+      ]
+    },
+    "gcode": {
+      "comment": "以下规则从 ml.nc-gcode-0.13.0/syntaxes/gcode.tmLanguage.json 原样照搬（scope 名、正则一字不改），保证 G 码部分配色与原生 NC-Gcode 完全一致",
+      "patterns": [
+        {
+          "comment": "N 行号",
+          "name": "constant.gcode",
+          "match": "[nN][ \\t]*[0-9\\.]+"
+        },
+        {
+          "comment": "G 码",
+          "name": "keyword.control.gcode.gcode",
+          "match": "[gG][ \\t]*[0-9][0-9\\.]*"
+        },
+        {
+          "comment": "R/Z 坐标",
+          "name": "keyword.string.gcode",
+          "match": "(?i)[rRzZ][ \\t]*[\\-\\+]?[0-9\\.]+"
+        },
+        {
+          "comment": "X/A/U/I 坐标",
+          "name": "string.xcode.gcode",
+          "match": "(?i)[XAUI][ \\t]*[\\-\\+]?[0-9\\.]+"
+        },
+        {
+          "comment": "Y/B/V/J 坐标",
+          "name": "comment.type.ycode.gcode",
+          "match": "(?i)[YBVJ][ \\t]*[\\-\\+]?[0-9\\.]+"
+        },
+        {
+          "comment": "M 码",
+          "name": "support.function.mcode.gcode",
+          "match": "[mM][ \\t]*[0-9][0-9\\.]*"
+        },
+        {
+          "comment": "D/F/H/S/T 刀具/进给/转速等",
+          "name": "support.type.dDfFhHsStTcode.gcode",
+          "match": "[dDfFhHsStT][ \\t]*[0-9][0-9\\.]*"
+        },
+        {
+          "comment": "P/Q/E 参数",
+          "name": "variable.parameter.pqecode.gcode",
+          "match": "[pPqQeE][ \\t]*[0-9][0-9\\.]*"
+        },
+        {
+          "comment": "C/W/K/L 循环",
+          "name": "string.control.mcode.gcode",
+          "match": "[cCwWkKlL][ \\t]*[\\-\\+]?[0-9\\.]+"
+        }
+      ]
+    },
+    "operators": {
+      "patterns": [
+        {
+          "comment": "算术/赋值/比较运算符",
+          "match": ":=|<>|<=|>=|=|<|>|\\+|-|\\*|/",
+          "name": "keyword.operator.syntec"
+        },
+        {
+          "comment": "分号语句结束符",
+          "match": ";",
+          "name": "punctuation.definition.statement.syntec"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "comment": "宏表达式中的数字",
+          "match": "(?<![0-9.])[0-9]+(?:\\.[0-9]*)?(?:[Ee][+-]?[0-9]+)?(?![0-9])",
+          "name": "constant.numeric.syntec"
+        }
+      ]
+    }
+  }
+}

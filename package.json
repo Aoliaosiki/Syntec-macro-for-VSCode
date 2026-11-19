@@ -1,0 +1,72 @@
+{
+  "name": "syntec-macro",
+  "displayName": "Syntec Macro",
+  "description": "Syntec 数控系统宏程序语言支持：语法高亮、代码片段、文件关联（支持无扩展名宏文件）",
+  "version": "0.1.0",
+  "publisher": "local",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Snippets"
+  ],
+  "keywords": [
+    "syntec",
+    "cnc",
+    "macro",
+    "数控",
+    "宏程序"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "syntec",
+        "aliases": [
+          "Syntec Macro",
+          "Syntec",
+          "数控宏程序"
+        ],
+        "extensions": [
+          ".mac",
+          ".pmc",
+          ".nc",
+          ".cnc"
+        ],
+        "filenames": [
+          "G0200"
+        ],
+        "filenamePatterns": [
+          "**/*"
+        ],
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icons/syntec-light.svg",
+          "dark": "./icons/syntec-dark.svg"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "syntec",
+        "scopeName": "source.syntec",
+        "path": "./syntaxes/syntec.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "syntec",
+        "path": "./snippets/syntec.code-snippets"
+      }
+    ],
+    "themes": [
+      {
+        "label": "Syntec Macro Color",
+        "uiTheme": "vs-dark",
+        "path": "./themes/syntec-color-theme.json"
+      }
+    ]
+  }
+}
+
