@@ -260,7 +260,9 @@ Syntec 中 `(` 兼作数学运算括号。高亮规则用前置断言 `(?<![A-Za
 ├── icons/
 │   ├── syntec-light.svg              # 浅色主题图标
 │   └── syntec-dark.svg               # 深色主题图标
-└── MACRO开发应用手册*.html           # Syntec 宏程序开发手册（参考文档）
+├── LICENSE                           # MIT 许可证
+├── CHANGELOG.md                      # 版本变更记录
+└── README.md                         # 使用说明
 ```
 
 ---
@@ -306,4 +308,4 @@ Syntec 中 `(` 兼作数学运算括号。高亮规则用前置断言 `(?<![A-Za
 ### 第三方与参考资料声明
 
 - G 码部分的 TextMate scope 命名与正则参考 [`ml.nc-gcode`](https://marketplace.visualstudio.com/items?itemName=ML.nc-gcode) 扩展的实现。
-- `MACRO开发应用手册*.html` 为 Syntec 控制器宏程序开发参考资料，版权归原厂或原作者所有。本仓库仅将其作为语法规则的核对依据；若公开分发，请自行确认其授权范围，或将其从公开仓库中移除。
+- 语法规则的核对依据为《MACRO开发应用手册》（Syntec 控制器厂商文档），该文档**不随本仓库或扩展包分发**，版权归原厂或原作者所有。
