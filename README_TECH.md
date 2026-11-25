@@ -787,3 +787,13 @@ Inline Suggestions（如 GitHub Copilot）的提示，表示当前光标位置�
 - 厂商手册 `MACRO开发应用手册*.html` 保留在源码目录，但不纳入 Git 仓库（`.gitignore` 排除）。
 - `vsce package` 验证通过：12 个文件、约 17 KB、无警告。
 - 新增 `.github/workflows/release.yml`：推送 `v*` 标签后自动校验版本、打包 VSIX 并创建 GitHub Release、上传附件。
+
+### 0.1.0 (2026-11-25)
+
+**文档与发布整理：**
+
+- `README.md` 按 PLC skill 的 README 风格补全：版本徽章、目录、`0.1.0 重点`、`测试与验证`、`发布与版本`。
+- 修正文件关联示例：实际使用 `filenamePatterns: ["**/*"]`，删除旧的 `**/Macro/G*`、`**/NCFILES/O*` 示例，避免文档与 `package.json` 冲突。
+- 修正片段数量：`syntec.code-snippets` 实际为 19 个，旧文档写 18 个。
+- 增加与 `Syntec-lad-skill-P` 的配合说明：宏程序的 `R`/`@` 地址、PLC 握手与报警位需要跨侧核对。
+- `CHANGELOG.md` 同步记录本次文档与发布整理。

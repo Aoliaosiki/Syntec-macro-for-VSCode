@@ -1,12 +1,68 @@
-# Syntec Macro — VS Code 扩展
+# Syntec Macro — VS Code 扩展（0.1.0）
+
+[![Version](https://img.shields.io/badge/version-0.1.0-blue)](CHANGELOG.md)
+[![VS Code](https://img.shields.io/badge/VS%20Code-%5E1.85.0-007ACC)](package.json)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 为 **Syntec 数控系统宏程序**（无扩展名宏文件，如 `G0200`、`G0001`）提供语言支持，包括语法高亮、代码片段、文件自动关联、括号配对、代码折叠、自动缩进与专属颜色主题。
+
+- G 码部分与原生 NC-Gcode 扩展逐 token 对齐。
+- 宏程序部分单独高亮：`#`/`@`/`AR`/`MAR`、控制流、60 个内置函数、`%@MACRO` 文件头。
+- 任意目录下的无扩展名文件自动识别，有后缀文件仍按扩展名优先。
+- 19 个代码片段、括号配对、代码折叠、自动缩进、语言图标与专属主题。
+
+> 当前版本：`0.1.0`。仓库：[`Aoliaosiki/Syntec-macro-for-VSCode`](https://github.com/Aoliaosiki/Syntec-macro-for-VSCode)。
+> 最新安装包见 [Releases](https://github.com/Aoliaosiki/Syntec-macro-for-VSCode/releases)；旧版本发布后删除，只保留最新。
+> 配套 PLC 梯形图 skill：[`Syntec-lad-skill-P`](https://github.com/Aoliaosiki/Syntec-lad-skill-P)，宏程序与 PLC 的 `R`/`@` 地址、握手、报警位需要一起核对。
 
 > 📘 **开发者 / AI 维护者请看 [`README_TECH.md`](./README_TECH.md)** —— 包含全部原理、文件逐块解析、正则与 JSON 转义速查、修改规范 SOP、调试技巧与版本变更记录。**任何代码改动后必须在该文档 §16 追加记录。**
 
 **核心设计：G 码部分严格对齐原生 [NC-Gcode 扩展](https://marketplace.visualstudio.com/items?itemName=ML.nc-gcode)（`ml.nc-gcode-0.13.0`），宏程序（MACRO）部分单独叠加高亮。**
 
 > 语法支持范围以《MACRO开发应用手册》（Syntec 控制器宏程序开发手册）为准，本扩展的高亮规则与手册逐项核对。
+
+## 目录
+
+- [0.1.0 重点](#010-重点)
+- [特性](#特性)
+- [支持的语法元素](#支持的语法元素)
+- [安装与使用](#安装与使用)
+- [颜色主题](#颜色主题)
+- [文件关联说明](#文件关联说明)
+- [与 PLC skill 的配合](#与-plc-skill-的配合)
+- [代码片段](#代码片段)
+- [常见问题（FAQ）](#常见问题faq)
+- [项目结构](#项目结构)
+- [扩展配置文件速览](#扩展配置文件速览)
+- [测试与验证](#测试与验证)
+- [发布与版本](#发布与版本)
+- [版本记录](#版本记录)
+- [版权与许可](#版权与许可)
+
+## 0.1.0 重点
+
+### G 码对齐原生 NC-Gcode
+
+语法文件中的 G/M/N/坐标/进给/转速/刀具/参数/循环字/注释规则，scope 命名与正则照搬 `ml.nc-gcode`（`ml.nc-gcode-0.13.0`）。扩展主题不覆盖这些 scope，颜色由当前 VS Code 主题按原生配色渲染。
+
+### 宏程序高亮与 60 个内置函数
+
+`#`/`@`/`AR`/`MAR` 变量（含动态数组）、`IF/FOR/WHILE/REPEAT/CASE` 控制流、运算符、`%@MACRO` 文件头，以及手册 Function List 全量 60 个内置函数。
+
+```text
+%@MACRO
+#1 := 0
+IF #1 < 10 THEN
+  #1 := #1 + 1
+END_IF
+M30
+```
+
+### 无扩展名文件全量识别
+
+`filenamePatterns` 使用 `**/*`：任意目录下没有后缀的文件（如 `G0200`、`O1234`）都会按 Syntec Macro 打开。`.mac`、`.pmc`、`.nc`、`.cnc` 等有后缀文件仍按扩展名优先识别。
+
+> 需要限定范围时，可把 `**/*` 收窄为 `**/Macro/G*`、`**/NCFILES/O*` 等模式，但会失去“任意目录无后缀文件自动识别”。
 
 ---
 
@@ -15,7 +71,7 @@
 - ✅ **G 码高亮与原生 NC-Gcode 完全一致**：语法文件中的 G/M/N/坐标/F/S/T/P/Q/C/W/K/L/注释规则**原样照搬** `ml.nc-gcode` 的 scope 命名与正则，配色与原生扩展逐 token 一致，不额外自定义覆盖
 - ✅ **宏程序高亮**：`#`/`@`/`MAR`/`AR` 变量（含动态数组）、控制流关键字、运算符、**手册函数表全量 60 个内置函数**、`%@MACRO` 文件头、`//` `(* *)` `( ... )` 注释
 - ✅ **无扩展名文件自动识别**：`filenamePatterns` 为 `**/*`，任意目录下的无扩展名文件（如 `G0200`、`O1234`）均自动按 Syntec 语言打开；有后缀文件仍按扩展名优先识别
-- ✅ **代码片段**：主程序、外扩 G 码、子程序、`if/ifelse/for/while/repeat/case/goto/exit`、变量赋值、`ar/mar`、`alarm/msg/print/sysdata` 等 18 个模板
+- ✅ **代码片段**：主程序、外扩 G 码、子程序、`if/ifelse/for/while/repeat/case/goto/exit`、变量赋值、`ar/mar`、`alarm/msg/print/sysdata` 等 19 个模板
 - ✅ **括号配对、代码折叠**（`IF…END_IF`、`FOR…END_FOR`、`WHILE…END_WHILE`、`REPEAT…END_REPEAT`、`CASE…END_CASE`）、**自动缩进**
 - ✅ **语言图标与显示名称**（Syntec Macro）
 
@@ -156,21 +212,32 @@ G 码颜色由**当前 VS Code 主题**（Dark+、Dark Modern 等）决定，**�
 
 ```json
 "filenamePatterns": [
-  "**/Macro/G*",
-  "**/Macro/*G*",
-  "**/Macro/O*",
-  "**/NCFILES/G*",
-  "**/NCFILES/O*"
+  "**/*"
 ]
 ```
 
-即路径含 `Macro` 目录且文件名以 `G` 开头（如 `G0200`、`G0309`）或以 `O` 开头（如 `O1234`）自动识别为 Syntec Macro。
+即任意目录下没有后缀的文件（如 `G0200`、`G0309`、`O1234`）均自动识别为 Syntec Macro。
+
+> 这是 0.1.0 的最终规则。旧文档里的 `**/Macro/G*`、`**/NCFILES/O*` 等目录限定模式已不再使用；如确实只想识别特定目录，可在 `package.json` 中收窄，但会失去全量识别能力。
 
 也支持有扩展名文件：`.mac`、`.pmc`、`.nc`、`.cnc`。
 
 手动指定：状态栏右下角**语言模式** → 选择 **Syntec Macro**，或命令面板 `Change Language Mode`。
 
 > ⚠️ 原生 NC-Gcode 也关联 `.nc`/`.cnc`。若打开 `.nc`/`.cnc` 显示的是 gcode 语法，手动切换语言模式为 **Syntec Macro** 即可。
+
+---
+
+## 与 PLC skill 的配合
+
+宏程序负责 G/M/T 入口、参数读写、报警触发与握手；PLC 负责寄存器、互锁与执行。涉及 `R`/`@` 地址、握手时序、报警位时，应与配套的 PLC 梯形图 skill 一起核对：
+
+- PLC skill：[`Aoliaosiki/Syntec-lad-skill-P`](https://github.com/Aoliaosiki/Syntec-lad-skill-P)
+- 宏程序 master 与同功能 M/O 入口要同步修改，PLC 侧使用同一地址时必须一起确认。
+- 宏里写 `R`、读 `@` 前，先确认 PLC 的读写时序与掉电保持要求，不要只改一侧。
+- 报警号、报警文字与 PLC 报警位需要交叉核对，避免宏触发了未定义的报警。
+
+本扩展只提供宏程序语言的编辑体验，不修改控制器、不上传 CNC，也不替代 PLC 编程与校验工具。
 
 ---
 
@@ -254,7 +321,7 @@ Syntec 中 `(` 兼作数学运算括号。高亮规则用前置断言 `(?<![A-Za
 ├── syntaxes/
 │   └── syntec.tmLanguage.json        # TextMate 语法高亮（G 码部分照搬原生 NC-Gcode scope）
 ├── snippets/
-│   └── syntec.code-snippets          # 18 个代码片段
+│   └── syntec.code-snippets          # 19 个代码片段
 ├── themes/
 │   └── syntec-color-theme.json       # 宏程序部分专属颜色主题
 ├── icons/
@@ -289,11 +356,64 @@ Syntec 中 `(` 兼作数学运算括号。高亮规则用前置断言 `(?<![A-Za
 
 ---
 
+## 测试与验证
+
+发布前至少完成以下检查，结果应全部通过：
+
+| 检查项 | 方法 | 结果 |
+| --- | --- | --- |
+| `package.json` 可解析 | `Get-Content package.json -Raw \| ConvertFrom-Json` | ✅ |
+| 语法文件可解析 | `Get-Content syntaxes\syntec.tmLanguage.json -Raw \| ConvertFrom-Json` | ✅ |
+| 片段文件可解析 | `Get-Content snippets\syntec.code-snippets -Raw \| ConvertFrom-Json` | ✅ |
+| 内置函数数量 | 统计语法文件 functions 正则中的函数名 | 60 个 |
+| 代码片段数量 | 统计 `syntec.code-snippets` 顶层键 | 19 个 |
+| VSIX 打包 | `npx @vscode/vsce package --out syntec-macro-0.1.0.vsix` | ✅ |
+| 无扩展名文件识别 | `package.json` 的 `filenamePatterns` 为 `**/*`；再在 VS Code 打开 `G0200` 手工确认语言模式 | 配置正确，需手工确认 |
+
+> 以上是发布前的最低检查，不替代在真实 VS Code 窗口里的手工验证。修改语法或片段后，必须同步安装目录并执行 `Developer: Reload Window`。
+
+---
+
+## 发布与版本
+
+版本号唯一来源是 `package.json` 的 `version`；Git tag 必须与它一致（当前为 `v0.1.0`）。`.github/workflows/release.yml` 会在推送 `v*` tag 时校验版本、打包 VSIX 并创建 GitHub Release。
+
+### 本地打包
+
+```powershell
+npx @vscode/vsce package --out syntec-macro-0.1.0.vsix
+```
+
+### 发布 GitHub Release
+
+```powershell
+git tag -a v0.1.0 -m "Syntec Macro 0.1.0"
+git push origin v0.1.0
+```
+
+也可以手动上传已打包的 VSIX：
+
+```powershell
+gh release create v0.1.0 syntec-macro-0.1.0.vsix `
+  --title "v0.1.0 — Syntec Macro" `
+  --notes-file CHANGELOG.md
+```
+
+仓库只保留最新 Release。发布新版本后删除旧 Release 与旧 tag：
+
+```powershell
+gh release delete <old-tag> --yes --cleanup-tag
+```
+
+---
+
 ## 版本记录
 
-| 版本 | 说明 |
-| --- | --- |
-| 0.1.0 | 初始版本；G 码对齐原生 NC-Gcode；宏程序高亮；按《MACRO开发应用手册》完整版核对函数表，内置函数扩展至 60 个（新增 `ATAN2` `AXID` `DBNEW` `DBSAVE` `DBINSERT` `DBDELETE` `SLEEP` `SIGN` `EXP` `READDI` `READDO` `READABIT` `READRREGBIT` `SETDO` `SETABIT` `SETRREGBIT` `SETDRAW` `DRAWHOLE` `PUSH` `POP` `STKTOP` `STD` `STDAX` `SYSVAR` `GETTRAPARG` `CHKINF`） |
+| 版本 | 日期 | 说明 |
+| --- | --- | --- |
+| 0.1.0 | 2026-11-25 | 首个公开版；G 码对齐原生 NC-Gcode；宏程序高亮；按《MACRO开发应用手册》完整版核对函数表，内置函数扩展至 60 个（新增 `ATAN2` `AXID` `DBNEW` `DBSAVE` `DBINSERT` `DBDELETE` `SLEEP` `SIGN` `EXP` `READDI` `READDO` `READABIT` `READRREGBIT` `SETDO` `SETABIT` `SETRREGBIT` `SETDRAW` `DRAWHOLE` `PUSH` `POP` `STKTOP` `STD` `STDAX` `SYSVAR` `GETTRAPARG` `CHKINF`） |
+
+> 仓库只保留最新 Release。发布新版本后会删除旧版本 Release 与对应 tag，避免用户下载到过期安装包。
 
 ---
 
